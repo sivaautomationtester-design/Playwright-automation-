@@ -1,0 +1,30 @@
+{
+  "name": "playwright-typescript-framework",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript test framework: API tests (Restful-Booker) and UI tests (SauceDemo) with CI",
+  "private": true,
+  "scripts": {
+    "allure:clean": "node scripts/clean-allure-results.cjs",
+    "pretest": "npm run allure:clean",
+    "test": "playwright test",
+    "pretest:api": "npm run allure:clean",
+    "test:api": "playwright test --project=api",
+    "pretest:ui": "npm run allure:clean",
+    "test:ui": "playwright test --project=chromium --project=firefox --project=webkit",
+    "pretest:chromium": "npm run allure:clean",
+    "test:chromium": "playwright test --project=chromium",
+    "pretest:headed": "npm run allure:clean",
+    "test:headed": "playwright test --project=chromium --headed",
+    "report": "playwright show-report",
+    "allure:generate": "allure generate allure-results --clean -o allure-report --report-name \"Playwright TypeScript Framework\"",
+    "allure:open": "allure open allure-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^22.10.0",
+    "allure-commandline": "^2.46.1",
+    "allure-playwright": "^3.14.0",
+    "typescript": "^5.7.0"
+  }
+}

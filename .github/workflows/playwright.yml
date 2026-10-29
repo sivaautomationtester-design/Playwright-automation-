@@ -1,0 +1,51 @@
+name: Playwright tests
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "30 3 * * *"   # daily at 09:00 IST
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Install browsers
+        run: npx playwright install --with-deps
+
+      - name: Run API and UI tests
+        run: npx playwright test
+
+      - name: Generate Allure report
+        if: always() && hashFiles('allure-results/*.json') != ''
+        run: npm run allure:generate
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Allure report
+        if: always() && hashFiles('allure-report/index.html') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/
+          retention-days: 14
